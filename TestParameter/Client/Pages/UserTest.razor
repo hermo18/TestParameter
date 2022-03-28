@@ -1,10 +1,67 @@
 ﻿@inherits UserTest2
 @page "/UserTest"
+@using System.ComponentModel.DataAnnotations
+
+
 <h3>UserTest</h3>
 
 
 
-<input placeholder="@Placeholder"/>
+@*<input placeholder="@Placeholder"/>
+<footer><p>@Footer</p></footer>*@
+
+<EditForm Model="person" OnInvalidSubmit="SendUser">
+	<DataAnnotationsValidator></DataAnnotationsValidator>
+	<ValidationSummary></ValidationSummary>
+	<label>
+		Name: 
+		<InputText @bind-Value="person.Name" placeholder="@Placeholder" class="form-control"></InputText>
+	</label>
+	<br />
+	<br />
+	<label>
+		Id:
+		<InputNumber @bind-Value="person.Id" class="form-control"></InputNumber>
+	</label>
+	
+
+
+	<button type="submit" @onclick="SendUser" class="btn btn-primary">Submit</button>
+
+</EditForm>
+
+<p>@nombre</p>
+<ul>
+@foreach(var user in list)
+{
+	<li>@person.Name</li>
+}
+</ul>
 
 @code {
+
+	private string nombre;
+	Person person { get; set; } = new Person();
+
+	public List<Person> list= new List<Person>();
+
+	private void SendUser()
+	{
+		list.Add(person);
+		person = new Person();
+		//nombre = $"Hola {person.Name}, su número de usuario es: {person.Id}";
+	}
+
+    class Person
+    {
+		[Required]
+		[StringLength(100)]
+		public String Name { get; set; }
+		
+		[Required]
+		[Range(1, 100)]
+		public int Id { get; set; }
+
+
+	}
 }
